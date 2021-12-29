@@ -1,5 +1,6 @@
 pub mod first;
 pub mod second;
+pub mod third;
 
 #[cfg(test)]
 mod tests {
@@ -124,5 +125,34 @@ mod tests {
         assert_eq!(Some(4), into_iter.next());
         assert_eq!(Some(2), into_iter.next());
         assert_eq!(None, into_iter.next());
+    }
+
+    #[test]
+    fn third_list_works() {
+        let list = third::List::new();
+
+        let list = list.push(1).push(2).push(3);
+        assert_eq!(Some(&3), list.head());
+
+        let list = list.tail();
+        assert_eq!(Some(&2), list.head());
+
+        let list = list.tail();
+        assert_eq!(Some(&1), list.head());
+
+        let list = list.tail();
+        assert_eq!(None, list.head());
+    }
+
+    #[test]
+    fn third_list_iter_works() {
+        let list = third::List::new().push(1).push(2).push(3);
+
+        let mut iter = list.iter();
+
+        assert_eq!(Some(&3), iter.next());
+        assert_eq!(Some(&2), iter.next());
+        assert_eq!(Some(&1), iter.next());
+        assert_eq!(None, iter.next());
     }
 }
