@@ -1,4 +1,6 @@
+pub mod fifth;
 pub mod first;
+pub mod fourth;
 pub mod second;
 pub mod third;
 
@@ -154,5 +156,86 @@ mod tests {
         assert_eq!(Some(&2), iter.next());
         assert_eq!(Some(&1), iter.next());
         assert_eq!(None, iter.next());
+    }
+
+    #[test]
+    fn fourth_list_works() {
+        let mut list = fourth::List::new();
+
+        // Check empty list behaves right
+        assert_eq!(list.pop_head(), None);
+
+        // Populate list
+        list.prepend(1);
+        list.prepend(2);
+        list.prepend(3);
+
+        // Check normal removal
+        assert_eq!(list.pop_head(), Some(3));
+        assert_eq!(list.pop_head(), Some(2));
+
+        // Push some more just to make sure nothing's corrupted
+        list.prepend(4);
+        list.prepend(5);
+
+        // Check normal removal
+        assert_eq!(list.pop_head(), Some(5));
+        assert_eq!(list.pop_head(), Some(4));
+
+        // Check exhaustion
+        assert_eq!(list.pop_head(), Some(1));
+        assert_eq!(list.pop_head(), None);
+
+        let mut list = fourth::List::new();
+
+        // Check empty list behaves right
+        assert_eq!(list.pop_tail(), None);
+
+        // Populate list
+        list.append(1);
+        list.append(2);
+        list.append(3);
+
+        // Check normal removal
+        assert_eq!(list.pop_tail(), Some(3));
+        assert_eq!(list.pop_tail(), Some(2));
+
+        // Push some more just to make sure nothing's corrupted
+        list.append(4);
+        list.append(5);
+
+        // Check normal removal
+        assert_eq!(list.pop_tail(), Some(5));
+        assert_eq!(list.pop_tail(), Some(4));
+
+        // Check exhaustion
+        assert_eq!(list.pop_tail(), Some(1));
+        assert_eq!(list.pop_tail(), None);
+    }
+
+    #[test]
+    fn fourth_list_peek_head() {
+        let mut list = fourth::List::new();
+        assert!(list.peek_head().is_none());
+        list.prepend(1);
+        list.prepend(2);
+        list.prepend(3);
+
+        assert_eq!(&*list.peek_head().unwrap(), &3);
+    }
+
+    #[test]
+    fn fourth_list_into_iter() {
+        let mut list = fourth::List::new();
+        list.prepend(1);
+        list.prepend(2);
+        list.prepend(3);
+
+        let mut iter = list.into_iter();
+        assert_eq!(iter.next(), Some(3));
+        assert_eq!(iter.next_back(), Some(1));
+        assert_eq!(iter.next(), Some(2));
+        assert_eq!(iter.next_back(), None);
+        assert_eq!(iter.next(), None);
     }
 }
