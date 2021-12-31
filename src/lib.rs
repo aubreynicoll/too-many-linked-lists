@@ -238,4 +238,93 @@ mod tests {
         assert_eq!(iter.next_back(), None);
         assert_eq!(iter.next(), None);
     }
+
+    #[test]
+    fn fifth_list_ok() {
+        let mut list = fifth::List::new();
+
+        // Check empty list behaves right
+        assert_eq!(list.pop(), None);
+
+        // Populate list
+        list.push(1);
+        list.push(2);
+        list.push(3);
+
+        // Check normal removal
+        assert_eq!(list.pop(), Some(1));
+        assert_eq!(list.pop(), Some(2));
+
+        // Push some more just to make sure nothing's corrupted
+        list.push(4);
+        list.push(5);
+
+        // Check normal removal
+        assert_eq!(list.pop(), Some(3));
+        assert_eq!(list.pop(), Some(4));
+
+        // Check exhaustion
+        assert_eq!(list.pop(), Some(5));
+        assert_eq!(list.pop(), None);
+
+        // Check the exhaustion case fixed the pointer right
+        list.push(6);
+        list.push(7);
+
+        // Check normal removal
+        assert_eq!(list.pop(), Some(6));
+        assert_eq!(list.pop(), Some(7));
+        assert_eq!(list.pop(), None);
+    }
+
+    #[test]
+    fn fifth_into_iter_works() {
+        let mut fifth_list = fifth::List::new();
+        fifth_list.push(1);
+        fifth_list.push(2);
+        fifth_list.push(3);
+
+        let mut into_iter = fifth_list.into_iter();
+
+        assert_eq!(Some(1), into_iter.next());
+        assert_eq!(Some(2), into_iter.next());
+        assert_eq!(Some(3), into_iter.next());
+        assert_eq!(None, into_iter.next());
+    }
+
+    #[test]
+    fn fifth_iter_works() {
+        let mut fifth_list = fifth::List::new();
+        fifth_list.push(1);
+        fifth_list.push(2);
+        fifth_list.push(3);
+
+        let mut iter = fifth_list.iter();
+
+        assert_eq!(Some(&1), iter.next());
+        assert_eq!(Some(&2), iter.next());
+        assert_eq!(Some(&3), iter.next());
+        assert_eq!(None, iter.next());
+    }
+
+    #[test]
+    fn fifth_iter_mut_works() {
+        let mut fifth_list = fifth::List::new();
+        fifth_list.push(1);
+        fifth_list.push(2);
+        fifth_list.push(3);
+
+        let mut iter_mut = fifth_list.iter_mut();
+
+        while let Some(n) = iter_mut.next() {
+            *n = *n * 2;
+        }
+
+        let mut into_iter = fifth_list.into_iter();
+
+        assert_eq!(Some(2), into_iter.next());
+        assert_eq!(Some(4), into_iter.next());
+        assert_eq!(Some(6), into_iter.next());
+        assert_eq!(None, into_iter.next());
+    }
 }
